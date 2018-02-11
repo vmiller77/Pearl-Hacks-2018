@@ -48,7 +48,9 @@ public class SignUpActivity extends AppCompatActivity {
         if(password.equals(confirmPassword)){
             if(!userExist(username)){
                 addUser(username,password);
-                Intent intent = new Intent(SignUpActivity.this, MapsActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("name",username);
+                Intent intent = new Intent(SignUpActivity.this, InstructionsActivity.class).putExtras(bundle);
                 startActivity(intent);
             }else{
                 Invalid.setText("Username already taken! Try again.");

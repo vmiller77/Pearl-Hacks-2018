@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
     private void validate(String userName, String userPassword){
@@ -68,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                // (userName.equals("admin")) && (userPassword.equals("1234"))
                 ){
          //go to next activity
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class).putExtra("<Stringname>",userName);
+            Bundle bundle=new Bundle();
+            bundle.putString("name",userName);
+            Intent intent = new Intent(MainActivity.this, InstructionsActivity.class).putExtras(bundle);
             startActivity(intent);
         }else{
             counter--;

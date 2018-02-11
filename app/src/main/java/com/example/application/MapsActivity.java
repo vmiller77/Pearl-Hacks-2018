@@ -30,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText newLocationName;
 
     DatabaseHelperPoints myDb;
+    DatabaseHelperStars myDbStars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //mMap.setMapStyle();
         myDb = new DatabaseHelperPoints(this);
-
+        myDbStars = new DatabaseHelperStars(this);
         //Get all points from sql and add as points onto map
         Cursor res =myDb.getAllPoints();
         if(res.getCount()!=0){
@@ -94,6 +94,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         currentMarker = null;
                         addedPin = false;
                         newLocationName.setHint("Thanks for adding!");
+                        Bundle bundle=getIntent().getExtras();
+                        String stuff = bundle.getString("name");
+                        myDbStars.insertStar(stuff);
                     }
                 }
             }
@@ -104,8 +107,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s= getIntent().getStringExtra("StringName");
-                Intent intent = new Intent(MapsActivity.this, UserActivity.class).putExtra("<String>",s);
+                Bundle bundle=getIntent().getExtras();
+                String stuff = bundle.getString("name");
+                bundle.putString("name",stuff);
+                Intent intent = new Intent(MapsActivity.this, UserActivity.class).putExtras(bundle);
                 startActivity(intent);
             }
         });
