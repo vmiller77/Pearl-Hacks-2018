@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="270dp"
-        android:layout_marginTop="440dp"
+        android:layout_marginTop="500dp"
         android:gravity="bottom|right"
         android:padding="10dp"
         android:paddingRight="10dp"
@@ -39,8 +39,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="Enter Location Name"
         android:inputType="textPersonName"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="invisible" />
+
+    <RadioButton
+        android:id="@+id/btnTampon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="33dp"
+        android:buttonTint="@android:color/holo_blue_bright"
+        android:checked="false"
+        android:duplicateParentState="false"
+        android:text="Tampons"
+        android:visibility="invisible" />
+
+    <RadioButton
+        android:id="@+id/btnPads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="56dp"
+        android:buttonTint="@android:color/holo_blue_bright"
+        android:text="Pads"
+        android:visibility="invisible" />
 
 </FrameLayout>

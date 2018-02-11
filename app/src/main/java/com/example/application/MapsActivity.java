@@ -1,13 +1,17 @@
 package com.example.application;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button Button;
     private Marker currentMarker;
     private EditText newLocationName;
+    private RadioButton tampons;
+    private RadioButton pads;
 
     DatabaseHelperPoints myDb;
     DatabaseHelperStars myDbStars;
@@ -66,6 +72,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         myDb = new DatabaseHelperPoints(this);
         myDbStars = new DatabaseHelperStars(this);
+        newLocationName = findViewById(R.id.etLocationName);
+        tampons=(RadioButton)findViewById(R.id.btnTampon);
+        pads=(RadioButton)findViewById(R.id.btnPads);
+
+
         //Get all points from sql and add as points onto map
         Cursor res =myDb.getAllPoints();
         if(res.getCount()!=0){
@@ -84,19 +95,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 if(currentMarker!=null) {
-                    newLocationName = findViewById(R.id.etLocationName);
                     if (newLocationName.getText().toString().isEmpty()) {
                         newLocationName.setHint("Please enter a location!");
                     } else {
-                        addPoint(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude, newLocationName.getText().toString());
-                        currentMarker.setTitle(newLocationName.getText().toString());
-                        newLocationName.setText("");
-                        currentMarker = null;
-                        addedPin = false;
-                        newLocationName.setHint("Thanks for adding!");
-                        Bundle bundle=getIntent().getExtras();
-                        String stuff = bundle.getString("name");
-                        myDbStars.insertStar(stuff);
+                        if(tampons.isChecked()||pads.isChecked()){
+                            //get info from buttons and appends to newLocationName
+                            String locName=newLocationName.getText().toString();
+                            locName=locName+": "+whichProducts();
+                            addPoint(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude, locName);
+                            currentMarker.setTitle(locName);
+                            newLocationName.setText("");
+                            currentMarker = null;
+                            addedPin = false;
+                            newLocationName.setHint("Enter Location Name");
+                            Bundle bundle=getIntent().getExtras();
+                            String stuff = bundle.getString("name");
+                            myDbStars.insertStar(stuff);
+
+                            //make radio buttons clear and everything invisible
+                            tampons.setChecked(false);
+                            pads.setChecked(false);
+//                            newLocationName.setVisibility(View.INVISIBLE);
+//                            tampons.setVisibility(View.INVISIBLE);
+//                            pads.setVisibility(View.INVISIBLE);
+
+                        }else{
+                            newLocationName.setHint("Please choose a product!");
+                        }
+
                     }
                 }
             }
@@ -128,6 +154,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     currentMarker = mMap.addMarker(opts.position(latLng).title("NEW").draggable(true));
                     addedPin=true;
                 }
+
+                //Make elements visible
+                newLocationName.setVisibility(View.VISIBLE);
+                tampons.setVisibility(View.VISIBLE);
+                pads.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -156,4 +188,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void addPoint(double lon, double lat, String name){
         myDb.insertPoint(lon,lat,name);
     }
+    public String whichProducts(){
+        if(tampons.isChecked()){
+            if(pads.isChecked()){
+                return "tampons and pads";
+            }else{
+                return "tampons";
+            }
+        }else{
+            return "pads";
+        }
+    }
+
 }

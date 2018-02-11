@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         Login=(Button)findViewById(R.id.btnLogin);
         SignUp=(TextView)findViewById(R.id.tvSignUp);
 
-        Info.setText("No of attempts remaining: 5");
 
         //button click listener
         Login.setOnClickListener(new View.OnClickListener(){
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else{
             counter--;
-            Info.setText("No of attempts remaining: "+String.valueOf(counter));
+            Info.setText("Invalid credentials. No of attempts remaining: "+String.valueOf(counter));
             if(counter==0){
                 //disable button
                 Login.setEnabled(false);
